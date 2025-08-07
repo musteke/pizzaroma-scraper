@@ -11,14 +11,13 @@ app.get('/menu', async (req, res) => {
   try {
     await page.goto('https://www.pizzaroma.be/nl/menu', { waitUntil: 'domcontentloaded' });
 
-    // Menü içeriği JavaScript ile yüklendiği için 15 saniye bekletiyoruz
-    await page.waitForTimeout(15000);
+    await page.waitForTimeout(15000); // İçerik yüklenmesini bekle
 
-    const items = await page.$$eval('.cg-col-6.m-b-0\\.5x', elements => {
+    const items = await page.$$eval('[data-testid="product"]', elements => {
       return elements.map(el => {
-        const name = el.querySelector('.barlow.bold.fs--18')?.innerText.trim() || '';
-        const price = el.querySelector('.barlow.bold.color--red.fs--16')?.innerText.trim() || '';
-        const ingredientsText = el.querySelector('.barlow.fs--14.color--dusty')?.innerText.trim() || '';
+        const name = el.querySelector('h3')?.innerText.trim() || '';
+        const price = el.querySelector('.color--red')?.innerText.trim() || '';
+        const ingredientsText = el.querySelector('.fs--14.color--dusty')?.innerText.trim() || '';
         const ingredients = ingredientsText ? ingredientsText.split(',').map(i => i.trim()) : [];
         return { name, price, ingredients };
       });
@@ -36,4 +35,3 @@ app.get('/menu', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Scraper çalışıyor http://localhost:${PORT}/menu`);
 });
-
