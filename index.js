@@ -11,10 +11,10 @@ app.get('/menu', async (req, res) => {
   try {
     await page.goto('https://www.pizzaroma.be/nl/menu', { waitUntil: 'domcontentloaded' });
 
-    // 15 saniye boyunca bekle ki içerikler yüklensin
+    // Menü içeriği JavaScript ile yüklendiği için 15 saniye bekletiyoruz
     await page.waitForTimeout(15000);
 
-    const items = await page.$$eval('[class~="cg-col-6"][class~="m-b-0.5x"]', elements => {
+    const items = await page.$$eval('.cg-col-6.m-b-0\\.5x', elements => {
       return elements.map(el => {
         const name = el.querySelector('.barlow.bold.fs--18')?.innerText.trim() || '';
         const price = el.querySelector('.barlow.bold.color--red.fs--16')?.innerText.trim() || '';
@@ -36,3 +36,4 @@ app.get('/menu', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Scraper çalışıyor http://localhost:${PORT}/menu`);
 });
+
