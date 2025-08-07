@@ -11,8 +11,8 @@ app.get('/menu', async (req, res) => {
   try {
     await page.goto('https://www.pizzaroma.be/nl/menu', { waitUntil: 'domcontentloaded' });
 
-    // Menüdeki bir öğe yüklenene kadar bekle
-    await page.waitForSelector('.barlow.bold.fs--18', { timeout: 10000 });
+    // 15 saniye boyunca bekle ki içerikler yüklensin
+    await page.waitForTimeout(15000);
 
     const items = await page.$$eval('[class~="cg-col-6"][class~="m-b-0.5x"]', elements => {
       return elements.map(el => {
